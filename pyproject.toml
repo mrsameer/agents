@@ -1,0 +1,12 @@
+[project]
+name = "agents"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "google-adk",
+    "langgraph>=0.2.60",
+    "langchain-google-genai>=2.0.8",
+    "langchain-core>=0.3.30",
+    "python-dotenv>=1.0.0",
+]
