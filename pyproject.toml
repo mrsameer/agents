@@ -1,12 +1,18 @@
 [project]
 name = "agents"
 version = "0.1.0"
-description = "Add your description here"
+description = "Agent implementations using Google ADK and LangGraph with MCP support"
 requires-python = ">=3.12"
 dependencies = [
+    # Google ADK for MCP integration
     "google-adk",
+    # LangGraph and LangChain
     "langgraph>=0.2.60",
+    "langchain>=0.3.0",
     "langchain-google-genai>=2.0.8",
     "langchain-core>=0.3.30",
+    # LangChain MCP Adapters for native MCP support in LangGraph
+    "langchain-mcp-adapters>=0.1.0",
+    # Environment variables
     "python-dotenv>=1.0.0",
 ]
