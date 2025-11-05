@@ -58,76 +58,28 @@ async def get_mcp_tools_description(mcp_toolset: MCPToolset) -> str:
         if not tools:
             return "Fetches AP WRIMS water resource data."
 
-        # Group tools by category based on keywords
-        categories = {
-            "rainfall": [],
-            "reservoir": [],
-            "groundwater": [],
-            "soil": [],
-            "tanks": [],
-            "irrigation": [],
-            "river": [],
-            "conservation": [],
-            "location": [],
-        }
-
+        # Build tool list from server response
         tool_lines = []
         for tool in tools:
             if not (hasattr(tool, "name") and hasattr(tool, "description")):
                 continue
 
-            name_lower = tool.name.lower()
-            for category in categories:
-                if category in name_lower:
-                    categories[category].append(tool.name)
-                    break
+            # Get description from server
+            description = (
+                tool.description.strip()
+                if isinstance(getattr(tool, "description", None), str)
+                else ""
+            )
 
-            # Build a readable one-liner for the tool itself
-            summary = tool.description.strip() if isinstance(getattr(tool, "description", None), str) else ""
+            tool_lines.append(f"- {tool.name}: {description}")
 
-            # Try to include argument names if present
-            arg_text = ""
-            args_obj = getattr(tool, "arguments", None)
-            if isinstance(args_obj, dict):
-                arg_names = list(args_obj.keys())
-                if arg_names:
-                    arg_text = f" (args: {', '.join(arg_names)})"
-            elif isinstance(args_obj, list) and args_obj and all(isinstance(a, str) for a in args_obj):
-                arg_text = f" (args: {', '.join(args_obj)})"
-
-            tool_lines.append(f"- {tool.name}: {summary}{arg_text}")
-
-        # Build description from categories
-        parts = []
-        if categories["rainfall"]:
-            parts.append("rainfall data")
-        if categories["reservoir"]:
-            parts.append("reservoir storage/levels/metadata")
-        if categories["groundwater"]:
-            parts.append("groundwater levels")
-        if categories["soil"]:
-            parts.append("soil moisture")
-        if categories["tanks"]:
-            parts.append("MI tanks data")
-        if categories["irrigation"]:
-            parts.append("lift irrigation schemes")
-        if categories["river"]:
-            parts.append("river gauge readings")
-        if categories["conservation"]:
-            parts.append("water conservation structures")
-        if categories["location"]:
-            parts.append("location metadata")
-
-        header = "Fetches AP WRIMS water resource data using available MCP tools."
-        summary = f"Summary: {', '.join(parts)}" if parts else None
+        # Build final description
+        header = f"Fetches AP WRIMS water resource data using {len(tool_lines)} MCP tools."
         details = "\n".join(tool_lines) if tool_lines else None
 
-        composed = [header]
-        if summary:
-            composed.append(summary)
         if details:
-            composed.append("\nTools:\n" + details)
-        return "\n".join(composed)
+            return f"{header}\n\nAvailable tools:\n{details}"
+        return header
     except Exception:
         # Fallback if dynamic fetch fails
         return "Fetches AP WRIMS water resource data."
