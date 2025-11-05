@@ -17,4 +17,14 @@ dependencies = [
     "python-dotenv>=1.0.0",
     # Data manipulation
     "pandas>=2.2.0",
+    # Disaster Data Collection Agent Dependencies (US1.1, US1.2, US1.3)
+    # Web search (free, no API key required)
+    "duckduckgo-search>=6.0.0",
+    # AI-powered web crawling (Crawl4AI)
+    "crawl4ai>=0.3.0",
+    # HTML parsing for structured data extraction
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    # Kafka client for message packet generation
+    "kafka-python>=2.0.2",
 ]
