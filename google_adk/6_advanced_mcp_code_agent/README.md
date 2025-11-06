@@ -6,6 +6,8 @@
 
 This agent demonstrates an advanced pattern for agent-MCP interaction that dramatically improves efficiency, scalability, and context usage. Instead of loading all tool definitions upfront and passing intermediate results through the model context, the agent writes code to interact with MCP servers using a **progressive disclosure** pattern.
 
+> **⚠️ Implementation Note**: The original design (using filesystem-based tool discovery via `./servers/` directory) doesn't work with Google ADK's isolated code execution sandbox. The **actual implementation** embeds all MCP server code inline in the agent's instruction, providing tools as simple functions (`gdrive_*()`, `sf_*()`). The `./servers/` directory remains as a **reference implementation** demonstrating the conceptual approach from the Anthropic paper. See [TESTING.md](./TESTING.md) for details.
+
 ## The Problem with Traditional MCP Integration
 
 As MCP adoption scales, traditional approaches face two key challenges:
