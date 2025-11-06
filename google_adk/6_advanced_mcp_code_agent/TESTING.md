@@ -44,11 +44,16 @@
    - F-strings: `f"Available servers: {servers}"`
    - Dictionary literals: `{"Status": "pending"}`
 
-   **Solution**: Escaped all curly braces in instruction string (`{` → `{{`, `}` → `}}`). This prevents the ADK from treating Python syntax as template variable references.
+   **Solution**: Completely rewrote code examples in instruction to eliminate all curly braces:
+   - Replaced f-strings: `print(f"Found {count}")` → `print("Found", count)`
+   - Replaced dict literals: `{"key": "value"}` → `dict(key="value")`
+   - Zero curly braces in entire instruction parameter
 
-   **Status**: ✅ Fixed in commit f7b2776
-   - All curly braces in code examples are now escaped
-   - Agent loads successfully in ADK web interface
+   **Note**: Initial fix attempt (escaping as `{{` and `}}`) didn't work because ADK's regex pattern `{+[^{}]*}+` still matched double braces.
+
+   **Status**: ✅ Fixed in commit 290f464
+   - Instruction rewritten with zero curly braces
+   - Agent should now load successfully in ADK web interface
    - Ready for interactive testing
 
 ## What Works
