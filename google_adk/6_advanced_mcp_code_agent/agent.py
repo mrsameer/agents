@@ -101,11 +101,11 @@ import os
 
 # 1. Discover available servers
 servers = os.listdir('./servers')
-print(f"Available servers: {{servers}}")
+print("Available servers:", servers)
 
 # 2. Explore google_drive tools
 gd_tools = [f for f in os.listdir('./servers/google_drive') if f.endswith('.py') and f != '__init__.py']
-print(f"Google Drive tools: {{gd_tools}}")
+print("Google Drive tools:", gd_tools)
 
 # 3. Read a tool definition to understand it
 with open('./servers/google_drive/get_document.py') as f:
@@ -114,7 +114,7 @@ with open('./servers/google_drive/get_document.py') as f:
 # 4. Import and use it
 from servers.google_drive import get_document
 doc = get_document("abc123")
-print(f"Title: {{doc['title']}}")
+print("Title:", doc['title'])
 
 
 CONTEXT-EFFICIENT DATA PROCESSING
@@ -131,10 +131,10 @@ rows = get_sheet("sheet001")
 pending = [r for r in rows if r.get("Status") == "pending"]
 
 # Only show summary + first 5 rows
-print(f"Found {{len(pending)}} pending items out of {{len(rows)}} total")
+print("Found", len(pending), "pending items out of", len(rows), "total")
 print("First 5 pending items:")
 for item in pending[:5]:
-    print(f"  - {{item['Name']}}: ${{item['Value']}}")
+    print("  -", item['Name'], ":", item['Value'])
 
 
 POWERFUL CONTROL FLOW
@@ -154,19 +154,19 @@ for row in rows:
     try:
         result = create_record(
             object_type="Lead",
-            data={{
-                "Company": row["Name"],
-                "Email": row["Contact"],
-                "Status": row["Status"]
-            }}
+            data=dict(
+                Company=row["Name"],
+                Email=row["Contact"],
+                Status=row["Status"]
+            )
         )
         if result.get("success"):
             success_count += 1
     except Exception as e:
         error_count += 1
-        print(f"Error importing {{row['Name']}}: {{e}}")
+        print("Error importing", row['Name'], ":", str(e))
 
-print(f"Imported {{success_count}} leads, {{error_count}} errors")
+print("Imported", success_count, "leads,", error_count, "errors")
 
 
 PRIVACY-PRESERVING OPERATIONS
@@ -183,7 +183,7 @@ doc = get_document("abc123")
 result = update_record(
     object_type="Lead",
     record_id="00Q5f000001abc001",
-    data={{"Notes": doc["content"]}}  # Full content flows through
+    data=dict(Notes=doc["content"])  # Full content flows through
 )
 print(result["message"])  # Only confirmation visible in context
 
@@ -202,7 +202,7 @@ leads = query("SELECT Id, Name, Email FROM Lead")
 with open('./workspace/leads_backup.json', 'w') as f:
     json.dump(leads, f, indent=2)
 
-print(f"Saved {{len(leads)}} leads to workspace/leads_backup.json")
+print("Saved", len(leads), "leads to workspace/leads_backup.json")
 
 
 SKILLS - REUSABLE FUNCTIONS
@@ -215,12 +215,11 @@ skill_code = """
 from servers.google_drive import get_sheet
 import json
 
-def export_sheet_to_json(sheet_id: str, output_path: str) -> str:
-    \"\"\"Export a Google Sheet to JSON file.\"\"\"
+def export_sheet_to_json(sheet_id, output_path):
     rows = get_sheet(sheet_id)
     with open(output_path, 'w') as f:
         json.dump(rows, f, indent=2)
-    return f"Exported {{len(rows)}} rows to {{output_path}}"
+    return "Exported " + str(len(rows)) + " rows to " + output_path
 """
 
 with open('./skills/export_sheet.py', 'w') as f:
